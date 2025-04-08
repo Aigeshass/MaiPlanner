@@ -8,7 +8,11 @@ import Dashboard from './components/Dashboard/Dashboard'
 import LoginPage from './components/Auth/LoginPage'
 import StatisticsPage from './pages/StatisticsPage'
 import ChatInterface from './components/ChatDemo/ChatInterface'
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
+import TermsOfServicePage from './pages/TermsOfServicePage'
 import './styles/App.css'
+import './styles/PrivacyPolicy.css'
+import './styles/Privacy.css'
 
 const theme = createTheme({
   palette: {
@@ -55,6 +59,8 @@ function App() {
             </Box>
           } />
           <Route path="/chat" element={<ChatInterface />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms-of-service" element={<TermsOfServicePage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

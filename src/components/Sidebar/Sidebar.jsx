@@ -9,7 +9,9 @@ import {
   ListItemButton,
   Divider,
   Typography,
-  IconButton
+  IconButton,
+  Menu,
+  MenuItem
 } from '@mui/material';
 import { 
   Home as HomeIcon,
@@ -19,7 +21,8 @@ import {
   Logout as LogoutIcon,
   HelpOutline as HelpIcon,
   PushPin as PinIcon,
-  Menu as MenuIcon
+  Menu as MenuIcon,
+  MoreVert as MoreVertIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,10 +39,24 @@ const menuItems = [
 
 const Sidebar = () => {
   const [isPinned, setIsPinned] = useState(true);
+  const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
 
   const toggleDrawer = () => {
     setIsPinned(!isPinned);
+  };
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const navigateTo = (path) => {
+    navigate(path);
+    handleMenuClose();
   };
 
   // Define common icon styling to be used throughout the sidebar
@@ -185,16 +202,17 @@ const Sidebar = () => {
       </List>
       <Box sx={{ 
         p: 2, 
-        pl: 1, // Reduce left padding to move help icon to the left
+        pl: 1,
         mt: 'auto', 
         display: 'flex', 
-        justifyContent: 'flex-start' 
+        flexDirection: 'column', 
+        alignItems: 'flex-start' 
       }}>
         <ListItemButton
           sx={{
             borderRadius: '8px',
             mx: 1,
-            ml: 0, // Reduce left margin to move help icon to the left
+            ml: 0,
             mb: 0.5,
             minHeight: 48,
             justifyContent: isPinned ? 'initial' : 'center',
@@ -213,26 +231,63 @@ const Sidebar = () => {
               alignItems: 'center',
             }}
           >
-            <Box sx={{ 
-              display: 'flex', 
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '24px',
-              height: '24px'
-            }}>
-              <HelpIcon sx={iconStyle} />
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <HelpIcon sx={{ fontSize: '1.25rem' }} />
             </Box>
           </ListItemIcon>
           {isPinned && (
             <ListItemText 
               primary="Help" 
-              primaryTypographyProps={{ 
-                fontWeight: 'regular'
-              }}
-              sx={{ opacity: isPinned ? 1 : 0 }}
+              primaryTypographyProps={{ fontWeight: 'regular' }}
             />
           )}
         </ListItemButton>
+
+        {isPinned && (
+          <Box sx={{ mt: 2, width: '100%', px: 2 }}>
+            <Typography variant="caption" color="text.secondary">
+              Legal
+            </Typography>
+            <Box sx={{ mt: 1, display: 'flex', flexDirection: 'column' }}>
+              <Typography 
+                variant="caption" 
+                component="a" 
+                onClick={() => navigateTo('/terms-of-service')}
+                sx={{ cursor: 'pointer', mb: 0.5, color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
+              >
+                Terms of Service
+              </Typography>
+              <Typography 
+                variant="caption" 
+                component="a" 
+                onClick={() => navigateTo('/privacy-policy')}
+                sx={{ cursor: 'pointer', color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
+              >
+                Privacy Policy
+              </Typography>
+            </Box>
+          </Box>
+        )}
+
+        {!isPinned && (
+          <>
+            <IconButton 
+              onClick={handleMenuOpen}
+              sx={{ mt: 2, alignSelf: 'center' }}
+            >
+              <MoreVertIcon fontSize="small" />
+            </IconButton>
+            
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+            >
+              <MenuItem onClick={() => navigateTo('/terms-of-service')}>Terms of Service</MenuItem>
+              <MenuItem onClick={() => navigateTo('/privacy-policy')}>Privacy Policy</MenuItem>
+            </Menu>
+          </>
+        )}
       </Box>
     </Drawer>
   );

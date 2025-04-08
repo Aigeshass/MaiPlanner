@@ -8,6 +8,7 @@ import {
   Link 
 } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
+import { Link as RouterLink } from 'react-router-dom';
 
 const LoginPage = () => {
   return (
@@ -101,11 +102,11 @@ const LoginPage = () => {
         {/* Footer text */}
         <Typography variant="body2" color="text.secondary" align="center">
           By signing in, you agree to MaiPlanner's{' '}
-          <Link href="#" color="primary">
+          <Link component={RouterLink} to="/terms-of-service" color="primary">
             Terms of Service
           </Link>
           {' '}and{' '}
-          <Link href="#" color="primary">
+          <Link component={RouterLink} to="/privacy-policy" color="primary">
             Privacy Policy
           </Link>
         </Typography>
