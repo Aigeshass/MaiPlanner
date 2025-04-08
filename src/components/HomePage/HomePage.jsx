@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -16,10 +17,17 @@ import {
   Mic as MicIcon,
   Send as SendIcon
 } from '@mui/icons-material';
+import Header from '../Header/Header';
 
 const HomePage = ({ sidebarWidth = '25%' }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate = useNavigate();
+  
+  // Handle login button click
+  const handleLoginClick = () => {
+    navigate('/login');
+  };
 
   return (
     <Box 
@@ -45,6 +53,7 @@ const HomePage = ({ sidebarWidth = '25%' }) => {
       >
         <Button 
           variant="contained" 
+          onClick={handleLoginClick}
           sx={{ 
             mr: { xs: 1, md: 2 }, 
             px: { xs: 2, md: 3 },

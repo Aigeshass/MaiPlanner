@@ -2,8 +2,12 @@ import React from 'react'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { Box } from '@mui/material'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Sidebar from './components/Sidebar/Sidebar'
 import Dashboard from './components/Dashboard/Dashboard'
+import LoginPage from './components/Auth/LoginPage'
+import StatisticsPage from './pages/StatisticsPage'
+import ChatInterface from './components/ChatDemo/ChatInterface'
 import './styles/App.css'
 
 const theme = createTheme({
@@ -31,12 +35,28 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ display: 'flex', height: '100vh' }}>
-        <Sidebar />
-        <Box component="main" sx={{ flexGrow: 1 }}>
-          <Dashboard />
-        </Box>
-      </Box>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={
+            <Box sx={{ display: 'flex', height: '100vh' }}>
+              <Sidebar />
+              <Box component="main" sx={{ flexGrow: 1, overflowY: 'auto' }}>
+                <Dashboard />
+              </Box>
+            </Box>
+          } />
+          <Route path="/statistics" element={
+            <Box sx={{ display: 'flex', height: '100vh' }}>
+              <Sidebar />
+              <Box component="main" sx={{ flexGrow: 1, overflowY: 'auto' }}>
+                <StatisticsPage />
+              </Box>
+            </Box>
+          } />
+          <Route path="/chat" element={<ChatInterface />} />
+        </Routes>
+      </BrowserRouter>
     </ThemeProvider>
   )
 }
