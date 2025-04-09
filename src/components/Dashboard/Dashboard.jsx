@@ -101,19 +101,11 @@ const Dashboard = () => {
         <Button 
           variant="contained" 
           color="primary" 
-          sx={{ mr: 2, borderRadius: '6px' }}
+          sx={{ borderRadius: '6px' }}
           onClick={handleLoginClick}
         >
           Log In
         </Button>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          sx={{ mr: 2, borderRadius: '6px' }}
-        >
-          Sign Up
-        </Button>
-        <Avatar sx={{ width: 36, height: 36 }}>U</Avatar>
       </Box>
 
       {/* Main Content with Integrated Chat */}
