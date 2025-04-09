@@ -18,7 +18,6 @@ import {
   CalendarToday as CalendarIcon,
   BarChart as BarChartIcon,
   Settings as SettingsIcon,
-  Logout as LogoutIcon,
   HelpOutline as HelpIcon,
   PushPin as PinIcon,
   Menu as MenuIcon,
@@ -33,8 +32,7 @@ const menuItems = [
   { text: 'Home', icon: <HomeIcon /> },
   { text: 'Calendar View', icon: <CalendarIcon /> },
   { text: 'Statistics', icon: <BarChartIcon /> },
-  { text: 'Settings', icon: <SettingsIcon /> },
-  { text: 'Logout', icon: <LogoutIcon /> }
+  { text: 'Settings', icon: <SettingsIcon /> }
 ];
 
 const Sidebar = () => {
