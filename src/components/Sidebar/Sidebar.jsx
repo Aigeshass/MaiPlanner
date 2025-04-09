@@ -156,6 +156,8 @@ const Sidebar = () => {
                   navigate('/statistics');
                 } else if (item.text === 'Home') {
                   navigate('/');
+                } else if (item.text === 'Settings') {
+                  navigate('/settings');
                 }
               }}
               sx={{

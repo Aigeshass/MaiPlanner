@@ -10,6 +10,7 @@ import StatisticsPage from './pages/StatisticsPage'
 import ChatInterface from './components/ChatDemo/ChatInterface'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import TermsOfServicePage from './pages/TermsOfServicePage'
+import SettingsPage from './pages/SettingsPage'
 import './styles/App.css'
 import './styles/PrivacyPolicy.css'
 import './styles/Privacy.css'
@@ -61,6 +62,14 @@ function App() {
           <Route path="/chat" element={<ChatInterface />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+          <Route path="/settings" element={
+            <Box sx={{ display: 'flex', height: '100vh' }}>
+              <Sidebar />
+              <Box component="main" sx={{ flexGrow: 1, overflowY: 'auto' }}>
+                <SettingsPage />
+              </Box>
+            </Box>
+          } />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
