@@ -11,6 +11,7 @@ import ChatInterface from './components/ChatDemo/ChatInterface'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import TermsOfServicePage from './pages/TermsOfServicePage'
 import SettingsPage from './pages/SettingsPage'
+import HelpPage from './pages/HelpPage'
 import './styles/App.css'
 import './styles/PrivacyPolicy.css'
 import './styles/Privacy.css'
@@ -67,6 +68,14 @@ function App() {
               <Sidebar />
               <Box component="main" sx={{ flexGrow: 1, overflowY: 'auto' }}>
                 <SettingsPage />
+              </Box>
+            </Box>
+          } />
+          <Route path="/help" element={
+            <Box sx={{ display: 'flex', height: '100vh' }}>
+              <Sidebar />
+              <Box component="main" sx={{ flexGrow: 1, overflowY: 'auto' }}>
+                <HelpPage />
               </Box>
             </Box>
           } />

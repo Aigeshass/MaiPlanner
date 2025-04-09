@@ -215,6 +215,7 @@ const Sidebar = () => {
         alignItems: 'flex-start' 
       }}>
         <ListItemButton
+          onClick={() => navigateTo('/help')}
           sx={{
             borderRadius: '8px',
             mx: 1,
