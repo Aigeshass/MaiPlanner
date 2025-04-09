@@ -39,13 +39,6 @@ const Header = ({ variant = 'default', onClick }) => {
       }}
       onClick={onClick}
     >
-      <img 
-        src="/favicon.svg" 
-        alt="MaiPlanner Logo" 
-        height={selectedVariant.fontSize === '2rem' ? 36 : 28} 
-        width={selectedVariant.fontSize === '2rem' ? 36 : 28}
-        style={{ margin: '0 4px' }}
-      />
       <Typography 
         variant={selectedVariant.fontSize === '2rem' ? 'h4' : 'h6'} 
         component="div" 

@@ -1,38 +1,78 @@
 # MaiPlanner
 
-A comprehensive planning application built with React and Vite.
+MaiPlanner is an intelligent calendar and task management application with an integrated AI assistant that helps you efficiently plan and organize your schedule.
 
 ## Features
 
-- **Modern UI**: Clean, responsive interface built with Material UI
-- **Fast Development**: Powered by Vite for lightning-fast development
-- **Component-Based Architecture**: Well-organized, reusable components
-- **Custom Hooks**: Enhanced functionality with React hooks
-- **Utility Functions**: Common operations simplified
+- **Dashboard**: Get an overview of your upcoming tasks and events
+- **Calendar**: View and manage your schedule in a visual calendar interface
+- **Statistics**: Track your productivity and task completion patterns
+- **AI Assistant**: Get help with scheduling using a built-in demo chat interface
+- **Settings**: Personalize the application to your preferences
 
-## Getting Started
+## Prerequisites
 
-### Prerequisites
+- Node.js (v14.0.0 or later)
+- npm (v6.0.0 or later)
 
-- Node.js (version 16 or above)
-- npm or yarn
-
-### Installation
+## Installation
 
 1. Clone the repository:
-   ```
-   git clone https://github.com/yourusername/maiplanner.git
-   cd maiplanner
-   ```
+
+```bash
+git clone https://github.com/yourusername/MaiPlanner-1.git
+cd MaiPlanner-1
+```
 
 2. Install dependencies:
-   ```
-   npm install
-   ```
 
-3. Start the development server:
-   ```
-   npm run dev
-   ```
+```bash
+npm install
+```
 
-### Build for Production
+## Running the Application
+
+1. Start the development server:
+
+```bash
+npm run dev
+```
+
+2. Open your browser and navigate to:
+
+```
+http://localhost:5173
+```
+
+## Using the AI Assistant
+
+1. Navigate to the Chat section from the sidebar.
+2. Type your scheduling request and press Enter or click the Send button.
+3. The demo AI assistant will respond with scheduling suggestions and assistance.
+
+Example queries:
+- "Schedule a meeting with John on Friday at 2pm"
+- "What events do I have tomorrow?"
+- "Help me plan my work week"
+
+## Project Structure
+
+- `/src` - Source code
+  - `/components` - React components
+  - `/pages` - Page components
+  - `/utils` - Utility functions, including AI integration
+  - `/styles` - CSS files
+
+## Development
+
+### Environment Variables
+
+The application uses the following environment variables:
+
+- `VITE_API_BASE_URL` - Base URL for API calls (default: http://localhost:8000)
+
+Create a `.env.local` file in the root directory to override these values for local development.
+
+## License
+
+[MIT](LICENSE)

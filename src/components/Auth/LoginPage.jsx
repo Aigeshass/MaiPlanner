@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Box, 
   Typography, 
@@ -8,9 +8,57 @@ import {
   Link 
 } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import GoogleSignInModal from './GoogleSignInModal';
+import GoogleOAuthConsent from './GoogleOAuthConsent';
+import { loginWithGoogle } from '../../utils/calendarService';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const [signInModalOpen, setSignInModalOpen] = useState(false);
+  const [showConsentScreen, setShowConsentScreen] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState(null);
+  
+  const handleGoogleSignIn = () => {
+    setSignInModalOpen(true);
+  };
+  
+  const handleAccountSelect = (account) => {
+    setSignInModalOpen(false);
+    setSelectedAccount(account);
+    setShowConsentScreen(true);
+  };
+  
+  const handleCancel = () => {
+    setShowConsentScreen(false);
+  };
+  
+  const handleContinue = async () => {
+    // This would be the actual Google OAuth flow in a real app
+    try {
+      console.log("Simulating Google OAuth login...");
+      
+      // Store login state
+      localStorage.setItem('isAuthenticated', 'true');
+      
+      // If we had a real backend, we would make an API call here
+      // await loginWithGoogle();
+      
+      return true;
+    } catch (error) {
+      console.error('Login failed:', error);
+      return false;
+    }
+  };
+
+  if (showConsentScreen) {
+    return <GoogleOAuthConsent 
+      account={selectedAccount} 
+      onCancel={handleCancel} 
+      onContinue={handleContinue} 
+    />;
+  }
+
   return (
     <Box sx={{ 
       bgcolor: 'white', 
@@ -77,6 +125,7 @@ const LoginPage = () => {
           variant="contained" 
           size="large"
           startIcon={<GoogleIcon />}
+          onClick={handleGoogleSignIn}
           sx={{ 
             backgroundColor: '#4285F4',
             color: 'white',
@@ -111,6 +160,13 @@ const LoginPage = () => {
           </Link>
         </Typography>
       </Container>
+
+      {/* Google Sign In Modal */}
+      <GoogleSignInModal 
+        open={signInModalOpen} 
+        onClose={() => setSignInModalOpen(false)}
+        onSelectAccount={handleAccountSelect}
+      />
     </Box>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Paper, Typography, Avatar, TextField, IconButton, CircularProgress } from '@mui/material';
 import { Send as SendIcon } from '@mui/icons-material';
-import { getGeminiResponse } from '../../utils/geminiIntegration';
+import { getMockResponse } from '../../utils/mockCalendarAssistant';
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState([
@@ -9,60 +9,85 @@ const ChatInterface = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
-
+    
     // Add user message
     const userMessage = { sender: 'user', content: input };
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
-
-    // Add a temporary "typing" message from bot
-    setMessages((prev) => [...prev, { sender: 'bot', content: '...', isTyping: true }]);
-
-    // Fetch response from Gemini
-    try {
-      const botResponse = await getGeminiResponse(input);
-      setMessages((prev) => prev.filter(msg => !msg.isTyping)
-        .concat([{ sender: 'bot', content: botResponse }]));
-    } catch (error) {
-      console.error('Error getting response:', error);
-      setMessages((prev) => prev.filter(msg => !msg.isTyping)
-        .concat([{ sender: 'bot', content: `Sorry, I encountered an error: ${error.message}` }]));
-    } finally {
+    
+    // Add typing indicator for realistic effect
+    setMessages(prev => [...prev, { sender: 'bot', content: '...', isTyping: true }]);
+    
+    // Simulate typing delay for realism
+    const typingDelay = Math.random() * 900 + 300;
+    
+    setTimeout(() => {
+      // Get response from mock assistant (no API calls)
+      const botResponse = getMockResponse(input);
+      
+      // Replace typing indicator with response
+      setMessages(prev => 
+        prev.filter(msg => !msg.isTyping)
+           .concat([{ sender: 'bot', content: botResponse }])
+      );
       setIsLoading(false);
+    }, typingDelay);
+  };
+
+  // Handle Enter key press
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
     }
   };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', p: 2 }}>
+      {/* Model indicator - now shows we're using a demo mode */}
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <Typography variant="caption" sx={{ mr: 1 }}>
+          Mode: Demo Calendar Assistant
+        </Typography>
+        <Box
+          sx={{
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            bgcolor: 'success.main',
+          }}
+        />
+      </Box>
+
       {/* Messages container */}
       <Box sx={{ flexGrow: 1, overflow: 'auto', mb: 2 }}>
         {messages.map((message, index) => (
-          <Box 
-            key={index} 
-            sx={{ 
-              display: 'flex', 
+          <Box
+            key={index}
+            sx={{
+              display: 'flex',
               justifyContent: message.sender === 'user' ? 'flex-end' : 'flex-start',
-              mb: 1.5
+              mb: 1.5,
             }}
           >
-            <Box 
-              sx={{ 
-                display: 'flex', 
+            <Box
+              sx={{
+                display: 'flex',
                 maxWidth: '80%',
                 alignItems: 'flex-start',
-                flexDirection: message.sender === 'user' ? 'row-reverse' : 'row'
+                flexDirection: message.sender === 'user' ? 'row-reverse' : 'row',
               }}
             >
-              <Avatar 
-                sx={{ 
+              <Avatar
+                sx={{
                   bgcolor: message.sender === 'user' ? '#1976d2' : '#9c27b0',
                   width: 38,
                   height: 38,
-                  m: 0.5
+                  m: 0.5,
                 }}
               >
                 {message.sender === 'user' ? 'U' : 'AI'}
@@ -76,7 +101,7 @@ const ChatInterface = () => {
                   color: message.sender === 'user' ? 'white' : 'text.primary',
                   ml: message.sender === 'user' ? 0 : 1,
                   mr: message.sender === 'user' ? 1 : 0,
-                  boxShadow: '0px 2px 4px rgba(0,0,0,0.05)'
+                  boxShadow: '0px 2px 4px rgba(0,0,0,0.05)',
                 }}
               >
                 {message.isTyping ? (
@@ -91,13 +116,13 @@ const ChatInterface = () => {
       </Box>
 
       {/* Input Area */}
-      <Paper 
+      <Paper
         elevation={3}
-        sx={{ 
-          p: 2, 
+        sx={{
+          p: 2,
           display: 'flex',
           alignItems: 'center',
-          bgcolor: 'white'
+          bgcolor: 'white',
         }}
       >
         <TextField
@@ -106,11 +131,12 @@ const ChatInterface = () => {
           variant="outlined"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyPress={handleKeyPress}
           disabled={isLoading}
-          sx={{ 
+          sx={{
             '& .MuiOutlinedInput-root': {
-              borderRadius: '8px'
-            }
+              borderRadius: '8px',
+            },
           }}
         />
         <IconButton onClick={handleSend} disabled={isLoading || !input.trim()} sx={{ ml: 1 }}>

@@ -17,16 +17,30 @@ import {
   Mic as MicrophoneIcon,
   Send as SendIcon
 } from '@mui/icons-material';
-import { getVertexAiResponse } from '../../utils/vertexAiIntegration';
+import { getMockResponse } from '../../utils/mockCalendarAssistant';
+import { checkAuthStatus } from '../../utils/calendarService';
+import ProfileMenu from '../ProfileMenu/ProfileMenu';
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [messages, setMessages] = useState([
     { sender: 'bot', content: "Hi! I'm your AI calendar assistant. How can I help you schedule your day?" }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isListening, setIsListening] = useState(false);
+  const [isFirstQuery, setIsFirstQuery] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authStatus = await checkAuthStatus();
+      setIsAuthenticated(authStatus);
+    };
+    
+    checkAuth();
+  }, []);
   
   // Handle login button click
   const handleLoginClick = () => {
@@ -34,7 +48,12 @@ const Dashboard = () => {
   };
 
   const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading || isListening) return;
+
+    // If this is the first query, set isFirstQuery to false
+    if (isFirstQuery) {
+      setIsFirstQuery(false);
+    }
 
     // Add user message
     const userMessage = { sender: 'user', content: input };
@@ -49,17 +68,17 @@ const Dashboard = () => {
     // Add a temporary "typing" message from bot
     setMessages((prev) => [...prev, { sender: 'bot', content: '...', isTyping: true }]);
 
-    // Fetch response from Vertex AI
+    // Fetch response from mock assistant
     try {
-      console.log('Sending prompt to Vertex AI:', userPrompt);
-      const botResponse = await getVertexAiResponse(userPrompt);
-      console.log('Received response from Vertex AI:', botResponse);
+      console.log('Sending prompt to mock assistant:', userPrompt);
+      const botResponse = await getMockResponse(userPrompt);
+      console.log('Received response from mock assistant:', botResponse);
       
       // Remove the typing message and add the real response
       setMessages((prev) => prev.filter(msg => !msg.isTyping)
         .concat([{ sender: 'bot', content: botResponse }]));
     } catch (error) {
-      console.error('Error from Vertex AI:', error);
+      console.error('Error from mock assistant:', error);
       // Remove the typing message
       setMessages((prev) => prev.filter(msg => !msg.isTyping));
       
@@ -70,7 +89,7 @@ const Dashboard = () => {
         content: `Sorry, I encountered an error connecting to the AI service: ${errorMessage}` 
       }]);
       
-      setError(`Failed to connect to Vertex AI: ${errorMessage}`);
+      setError(`Failed to connect to mock assistant: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -81,6 +100,47 @@ const Dashboard = () => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
+    }
+  };
+
+  // Function to handle microphone button click
+  const handleMicClick = () => {
+    // Check if browser supports speech recognition
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      setIsListening(true);
+      
+      // Use the appropriate Speech Recognition API
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+      
+      recognition.onstart = () => {
+        console.log('Voice recognition activated');
+      };
+      
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        console.log('Result received:', transcript);
+        setInput(transcript);
+      };
+      
+      recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+      };
+      
+      recognition.onend = () => {
+        setIsListening(false);
+        console.log('Voice recognition ended');
+      };
+      
+      recognition.start();
+    } else {
+      console.error('Speech recognition not supported in this browser');
+      setError('Speech recognition is not supported in your browser');
     }
   };
 
@@ -98,22 +158,7 @@ const Dashboard = () => {
           borderBottom: '1px solid #e0e0e0'
         }}
       >
-        <Button 
-          variant="contained" 
-          color="primary" 
-          sx={{ mr: 2, borderRadius: '6px' }}
-          onClick={handleLoginClick}
-        >
-          Log In
-        </Button>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          sx={{ mr: 2, borderRadius: '6px' }}
-        >
-          Sign Up
-        </Button>
-        <Avatar sx={{ width: 36, height: 36 }}>U</Avatar>
+        <ProfileMenu isAuthenticated={isAuthenticated} />
       </Box>
 
       {/* Main Content with Integrated Chat */}
@@ -127,22 +172,12 @@ const Dashboard = () => {
           bgcolor: '#f8f9fa'
         }}
       >
-        {/* Welcome Message */}
-        <Typography variant="h3" component="h1" align="center" sx={{ mb: 4 }}>
-          Hi there, <span style={{ color: '#9c27b0' }}>ready to start?</span>
-        </Typography>
-        
-        {/* API Status Indicator */}
-        <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
-          <Typography variant="body2" color="text.secondary">
-            Vertex AI API Status: {isLoading ? 
-              <span style={{ color: 'orange' }}>Connecting...</span> : 
-              error ? 
-                <span style={{ color: 'red' }}>Error</span> : 
-                <span style={{ color: 'green' }}>Ready</span>
-            }
+        {/* Welcome Message - show only before first query */}
+        {isFirstQuery && (
+          <Typography variant="h3" component="h1" align="center" sx={{ mb: 4 }}>
+            Hi there, <span style={{ color: '#9c27b0' }}>ready to start?</span>
           </Typography>
-        </Box>
+        )}
         
         {/* Messages container */}
         <Box sx={{ 
@@ -225,17 +260,41 @@ const Dashboard = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyPress={handleKeyPress}
-          disabled={isLoading}
+          disabled={isLoading || isListening}
           sx={{ 
             '& .MuiOutlinedInput-root': {
               borderRadius: '8px'
             }
           }}
         />
+        {/* Microphone Button */}
+        <IconButton 
+          onClick={handleMicClick}
+          disabled={isLoading}
+          sx={{ 
+            ml: 1,
+            color: isListening ? 'error.main' : 'default',
+            animation: isListening ? 'pulse 1.5s infinite' : 'none',
+            '@keyframes pulse': {
+              '0%': {
+                boxShadow: '0 0 0 0 rgba(244, 67, 54, 0.4)'
+              },
+              '70%': {
+                boxShadow: '0 0 0 10px rgba(244, 67, 54, 0)'
+              },
+              '100%': {
+                boxShadow: '0 0 0 0 rgba(244, 67, 54, 0)'
+              }
+            }
+          }}
+        >
+          <MicrophoneIcon />
+        </IconButton>
+        {/* Send Button */}
         <IconButton 
           onClick={handleSend} 
           sx={{ ml: 1 }}
-          disabled={isLoading || !input.trim()}
+          disabled={isLoading || isListening || !input.trim()}
         >
           {isLoading ? <CircularProgress size={24} /> : <SendIcon />}
         </IconButton>

@@ -1,0 +1,28 @@
+/* Global fixes for visibility issues */
+.MuiPaper-root {
+  background-color: #ffffff !important;
+}
+
+.MuiTypography-root {
+  color: #202124 !important;
+}
+
+.MuiMenuItem-root {
+  color: #202124 !important;
+}
+
+/* Calendar event specific fixes */
+.calendar-event {
+  color: white !important;
+  background-color: var(--event-color, #4285F4) !important;
+}
+
+.calendar-day {
+  background-color: #ffffff !important;
+}
+
+/* Menu fixes */
+.MuiMenu-paper {
+  background-color: #ffffff !important;
+  color: #202124 !important;
+}

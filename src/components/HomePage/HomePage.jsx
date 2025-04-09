@@ -55,20 +55,6 @@ const HomePage = ({ sidebarWidth = '25%' }) => {
           variant="contained" 
           onClick={handleLoginClick}
           sx={{ 
-            mr: { xs: 1, md: 2 }, 
-            px: { xs: 2, md: 3 },
-            py: { xs: 0.5, md: 0.75 },
-            bgcolor: '#1976d2',
-            '&:hover': { bgcolor: '#1565c0' },
-            borderRadius: '6px',
-            fontSize: { xs: '0.85rem', md: '0.95rem' }
-          }}
-        >
-          Log In
-        </Button>
-        <Button 
-          variant="contained" 
-          sx={{ 
             mr: { xs: 2, md: 3 }, 
             px: { xs: 2, md: 3 },
             py: { xs: 0.5, md: 0.75 },
@@ -78,7 +64,7 @@ const HomePage = ({ sidebarWidth = '25%' }) => {
             fontSize: { xs: '0.85rem', md: '0.95rem' }
           }}
         >
-          Sign Up
+          Sign in with Google
         </Button>
         <Avatar sx={{ width: { xs: 36, md: 40 }, height: { xs: 36, md: 40 } }}>P</Avatar>
       </Box>
