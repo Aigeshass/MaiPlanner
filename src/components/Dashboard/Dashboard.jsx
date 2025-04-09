@@ -9,7 +9,10 @@ import {
   Paper,
   CircularProgress,
   Snackbar,
-  Alert
+  Alert,
+  Menu,
+  MenuItem,
+  Divider
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -27,10 +30,38 @@ const Dashboard = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userProfile, setUserProfile] = useState({ name: 'Aigerim Kubanychbekova', email: 'aigerimk047@gmail.com' });
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  // Simulate checking auth status - in a real app this would check with your backend
+  useEffect(() => {
+    const path = window.location.pathname;
+    const referrer = document.referrer;
+    if (referrer.includes('/auth/permissions') || localStorage.getItem('isLoggedIn') === 'true') {
+      setIsAuthenticated(true);
+      localStorage.setItem('isLoggedIn', 'true');
+    }
+  }, []);
+
   // Handle login button click
   const handleLoginClick = () => {
     navigate('/login');
+  };
+
+  // Handle profile menu
+  const handleProfileClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    setIsAuthenticated(false);
+    handleMenuClose();
   };
 
   const handleSend = async () => {
@@ -98,14 +129,44 @@ const Dashboard = () => {
           borderBottom: '1px solid #e0e0e0'
         }}
       >
-        <Button 
-          variant="contained" 
-          color="primary" 
-          sx={{ borderRadius: '6px' }}
-          onClick={handleLoginClick}
-        >
-          Log In
-        </Button>
+        {isAuthenticated ? (
+          <>
+            <IconButton onClick={handleProfileClick}>
+              <Avatar sx={{ bgcolor: '#9c27b0' }}>
+                {userProfile.name.charAt(0).toUpperCase()}
+              </Avatar>
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+              PaperProps={{
+                elevation: 3,
+                sx: { minWidth: '200px', mt: 0.5 }
+              }}
+            >
+              <Box sx={{ p: 2 }}>
+                <Typography variant="subtitle1">{userProfile.name}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {userProfile.email}
+                </Typography>
+              </Box>
+              <Divider />
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
+          </>
+        ) : (
+          <Button 
+            variant="contained" 
+            color="primary" 
+            sx={{ borderRadius: '6px' }}
+            onClick={handleLoginClick}
+          >
+            Log In
+          </Button>
+        )}
       </Box>
 
       {/* Main Content with Integrated Chat */}

@@ -8,9 +8,15 @@ import {
   Link 
 } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  
+  const handleGoogleSignIn = () => {
+    navigate('/auth/accounts');
+  };
+
   return (
     <Box sx={{ 
       bgcolor: 'white', 
@@ -77,6 +83,7 @@ const LoginPage = () => {
           variant="contained" 
           size="large"
           startIcon={<GoogleIcon />}
+          onClick={handleGoogleSignIn}
           sx={{ 
             backgroundColor: '#4285F4',
             color: 'white',

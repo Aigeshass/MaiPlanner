@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Sidebar from './components/Sidebar/Sidebar'
 import Dashboard from './components/Dashboard/Dashboard'
 import LoginPage from './components/Auth/LoginPage'
+import GoogleAccountSelect from './components/Auth/GoogleAccountSelect'
+import GooglePermissionRequest from './components/Auth/GooglePermissionRequest'
 import StatisticsPage from './pages/StatisticsPage'
 import ChatInterface from './components/ChatDemo/ChatInterface'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
@@ -44,6 +46,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/auth/accounts" element={<GoogleAccountSelect />} />
+          <Route path="/auth/permissions" element={<GooglePermissionRequest />} />
           <Route path="/" element={
             <Box sx={{ display: 'flex', height: '100vh' }}>
               <Sidebar />
