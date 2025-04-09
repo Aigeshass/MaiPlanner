@@ -151,7 +151,13 @@ const Sidebar = () => {
         {menuItems.map((item) => (
           <ListItem key={item.text} disablePadding>
             <ListItemButton
-              onClick={() => item.text === 'Statistics' && navigate('/statistics')}
+              onClick={() => {
+                if (item.text === 'Statistics') {
+                  navigate('/statistics');
+                } else if (item.text === 'Home') {
+                  navigate('/');
+                }
+              }}
               sx={{
                 borderRadius: '8px',
                 mx: 1,
